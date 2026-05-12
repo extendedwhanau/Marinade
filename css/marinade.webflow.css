@@ -1,3 +1,21 @@
+@font-face {
+  font-family: "Stanley marinade";
+  src: url("../fonts/Stanley-Regular-Marinade.woff2") format("woff2"),
+    url("../fonts/Stanley-Regular-Marinade.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Stanley marinade";
+  src: url("../fonts/Stanley-Italic-Marinade.woff2") format("woff2"),
+    url("../fonts/Stanley-Italic-Marinade.woff") format("woff");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
 :root {
   --gold: #ffe300;
   --orange: #ffaf00;
@@ -21,7 +39,7 @@
 .h1 {
   color: #000;
   margin-top: 0;
-  font-family: Stanley marinade;
+  font-family: "Stanley marinade", serif;
   font-size: 3.33vw;
   font-weight: 400;
   line-height: 4.166vw;
@@ -84,7 +102,7 @@
 
 .tab-link:hover {
   border-bottom: 2px solid #000;
-  font-family: Stanley marinade;
+  font-family: "Stanley marinade", serif;
   font-style: italic;
 }
 
@@ -98,7 +116,7 @@
 
 .paragraph {
   color: #000;
-  font-family: Stanley marinade;
+  font-family: "Stanley marinade", serif;
   font-size: 1.25vw;
   line-height: 1.56vw;
 }
