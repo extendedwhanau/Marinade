@@ -1,0 +1,63 @@
+/* Moved from index.html — layout tweaks + Issue 03 comparison slider */
+
+.issue-text-div {
+  pointer-events: none;
+}
+
+.issue-cover-div {
+  z-index: 1 !important;
+}
+
+.issue-text-div {
+  z-index: 5 !important;
+}
+
+.issue-title-div {
+  z-index: 5 !important;
+}
+
+.letter-container {
+  width: 100% !important;
+}
+
+/* Issue 03 — image compare (URLs set from js/issues-config.js) */
+div#comparison {
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  margin: 0;
+}
+
+div#comparison figure {
+  background-image: var(
+    --mar-compare-base,
+    url("https://d2w9rnfcy7mm78.cloudfront.net/29561535/original_648ee4d8f854400c4d362c481f55cdbc.png?1721703992?bc=0")
+  );
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+  position: relative;
+  font-size: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+div#comparison figure > img {
+  position: relative;
+  width: 100%;
+}
+
+div#comparison figure #divisor {
+  background-image: var(
+    --mar-compare-overlay,
+    url("https://d2w9rnfcy7mm78.cloudfront.net/29561545/original_0039bf3c0725e7a38cccf229cd86693e.png?1721704029?bc=0")
+  );
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+  position: absolute;
+  width: 50%;
+  overflow: hidden;
+  bottom: 0;
+  height: 100%;
+}
