@@ -1,18 +1,21 @@
 /**
- * Marinade — issue content & assets
- * ---------------------------------
- * Issue 01 (Writing) cover letters are not pasted here: they live as plain SVG
- * files in svg/issue-01/ (letter-m.svg … letter-e.svg). letter-a.svg is reused
- * for both “A” glyphs. Change fill inside those files to retint the cover.
+ * Marinade — issue content & assets (single source of truth)
+ * ----------------------------------------------------------
+ * Edit here: titles, contributor list, buy link + label, shop URLs, images,
+ * Issue 03 comparison URLs, Issue 04 cover SVG path + solid background colour.
  *
- * When you add Issue 04: duplicate a tab + pane in index.html (copy the closest
- * interaction pattern), then add a new entry here and wire data-w-tab / classes.
+ * Issue 01 cover letters: svg/issue-01/letter-*.svg (change fill in those files).
+ *
+ * When you add Issue 05+: duplicate a tab + pane in index.html, add an entry below,
+ * and wire any special behaviour in js/marinade-site.js if needed.
  *
  * `tabKey` must match data-w-tab on the tab link and tab pane in index.html.
  */
 window.MARINADE_ISSUES = {
   writing: {
     tabKey: "Writing",
+    title: "Writing",
+    buyLabel: "Buy",
     contributors:
       "Daniel Michael Satele, Pandora Fulimalo Pereira, Ioana Gordon-Smith, Lagi-Maama Academy & Consultancy, Lana Lopesi, Leone Samu Tui, Luisa Keteiyau Tora, Natasha Matila-Smith, Ngahuia Harrison, Sean Mallon, Stephanie Oberg, Peter Brunt, Raymond Sagapolutele, Talei Tuʻinukuafe, Teresia Teaiwa",
     buyUrl:
@@ -20,6 +23,8 @@ window.MARINADE_ISSUES = {
   },
   international: {
     tabKey: "International",
+    title: "International",
+    buyLabel: "Buy",
     contributors:
       "Ahilapalapa Rands, Andrea Low, Christina Pataialii, Cora-Allan, Ioana Gordon-Smith, Janet Lilo, Jim Vivieaere, Kalisolaite ‘Uhila, Lana Lopesi, Leafā Wilson/Olga Krause, Léuli Eshrāghi, Misal Adnan Yildiz, Natasha Matila-Smith, Tuāfale Tanoaʻi",
     buyUrl:
@@ -28,6 +33,8 @@ window.MARINADE_ISSUES = {
   },
   friendship: {
     tabKey: "Friendship",
+    title: "Friendship",
+    buyLabel: "Buy",
     contributors:
       "Edith Amituanai, Ralph Brown, Peter Brunt, Kiri Chan, Feeonaa Clifton, Ioana Gordon-Smith, Jacki Leota-Mua, Lindah Lepou, Lana Lopesi, Andrea Low, Gloriana Meyers, Rosanna Raymond, Tuāfale Tanoaʻi, Seutaʻafili Patrick Thomsen, Luisa Keteiyau Tora, Manuhaʻapai Vaeatangitau, John Vea",
     buyUrl:
@@ -38,5 +45,17 @@ window.MARINADE_ISSUES = {
       overlay:
         "https://d2w9rnfcy7mm78.cloudfront.net/29561545/original_0039bf3c0725e7a38cccf229cd86693e.png?1721704029?bc=0",
     },
+  },
+  fourth: {
+    tabKey: "Fourth",
+    title: "Uncertainty",
+    buyLabel: "Coming Soon",
+    contributors:
+      "Zoe Black, Peter Brunt, Ioana Gordon-Smith, Manumaleuga Grace Iwashita-Taylor, Emelihter Kihleng, Lana Lopesi, Andrea Low, Roman Lytollis, Emma Ng, Emily Parr, Israel Randell, Seuta‘afili Patrick Thomsen, Luisa Keteiyau Tora, Matariki Williams, Leafā Wilson/Olga Krause, Wheke Fortress",
+    buyUrl: "https://shop.moanafresh.com/",
+    /** Issue 04 hero artwork (slow spin + gentle zoom; path used by applyIssueCopy). */
+    coverLetterSvg: "images/breadfruit.svg",
+    /** Solid colour behind the Issue 04 artwork (all breakpoints). */
+    coverBackground: "#615243",
   },
 };
