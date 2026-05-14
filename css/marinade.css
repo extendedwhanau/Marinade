@@ -2190,6 +2190,8 @@ textarea.w-select {
   --dark-orange: #e08300;
   /* Issue 04 — default until js/issues-config.js sets `fourth.coverBackground` */
   --mar-issue-04-cover-bg: rgb(74, 45, 31);
+  /* Orbit animation base rotation; JS sets a random value on load */
+  --mar-issue-04-spin-start: 0deg;
 }
 
 .footer {
@@ -2999,13 +3001,13 @@ textarea.w-select {
 /* Issue 04 — breadfruit art: slow orbit + subtle zoom; natural colours; pointer tilt in JS */
 @keyframes mar-issue04-orbitzoom {
   0% {
-    transform: rotate(0deg) scale(1.74);
+    transform: rotate(var(--mar-issue-04-spin-start, 0deg)) scale(1.74);
   }
   50% {
-    transform: rotate(180deg) scale(1.96);
+    transform: rotate(calc(var(--mar-issue-04-spin-start, 0deg) + 180deg)) scale(1.96);
   }
   100% {
-    transform: rotate(360deg) scale(1.74);
+    transform: rotate(calc(var(--mar-issue-04-spin-start, 0deg) + 360deg)) scale(1.74);
   }
 }
 
@@ -3061,7 +3063,7 @@ textarea.w-select {
 @media (prefers-reduced-motion: reduce) {
   .issue-04-letter-anim {
     animation: none;
-    transform: scale(1.81) rotate(0deg);
+    transform: scale(1.81) rotate(var(--mar-issue-04-spin-start, 0deg));
   }
 }
 

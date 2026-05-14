@@ -347,6 +347,11 @@
 
   /** Issue 04: slow spin + zoom on cover art; pointer tilts / skews the SVG (Fourth tab only). */
   function initIssueFourthLetter() {
+    document.documentElement.style.setProperty(
+      "--mar-issue-04-spin-start",
+      (Math.random() * 360).toFixed(2) + "deg"
+    );
+
     var fourthKey =
       issues.fourth && issues.fourth.tabKey ? issues.fourth.tabKey : "Fourth";
     var tilt = document.querySelector(".issue-04-letter-tilt");
