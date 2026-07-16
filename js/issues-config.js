@@ -49,7 +49,7 @@ window.MARINADE_ISSUES = {
   fourth: {
     tabKey: "Fourth",
     title: "Uncertainty",
-    buyLabel: "Coming Soon",
+    buyLabel: "Pre-order",
     contributors:
       "Zoe Black, Peter Brunt, Ioana Gordon-Smith, Manumaleuga Grace Iwashita-Taylor, Emelihter Kihleng, Lana Lopesi, Andrea Low, Roman Lytollis, Emma Ng, Emily Parr, Israel Randell, Seuta‘afili Patrick Thomsen, Luisa Keteiyau Tora, Matariki Williams, Leafā Wilson/Olga Krause, Wheke Fortress",
     buyUrl:
