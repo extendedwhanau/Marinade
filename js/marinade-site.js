@@ -40,7 +40,9 @@
     var p = paneByTab(tabKey);
     if (!p) return;
     var a = p.querySelector(".link-div a._02");
-    if (a) a.href = url;
+    if (!a) return;
+    a.href = url;
+    if (url.indexOf("mailto:") === 0) a.removeAttribute("target");
   }
 
   function setBuyLabel(tabKey, label) {

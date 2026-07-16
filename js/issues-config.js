@@ -1,7 +1,7 @@
 /**
  * Marinade — issue content & assets (single source of truth)
  * ----------------------------------------------------------
- * Edit here: titles, contributor list, buy link + label, shop URLs, images,
+ * Edit here: titles, contributor list, buy link + label, images,
  * Issue 03 comparison URLs, Issue 04 cover SVG path + solid background colour.
  *
  * Issue 01 cover letters: svg/issue-01/letter-*.svg (change fill in those files).
@@ -19,7 +19,7 @@ window.MARINADE_ISSUES = {
     contributors:
       "Daniel Michael Satele, Pandora Fulimalo Pereira, Ioana Gordon-Smith, Lagi-Maama Academy & Consultancy, Lana Lopesi, Leone Samu Tui, Luisa Keteiyau Tora, Natasha Matila-Smith, Ngahuia Harrison, Sean Mallon, Stephanie Oberg, Peter Brunt, Raymond Sagapolutele, Talei Tuʻinukuafe, Teresia Teaiwa",
     buyUrl:
-      "https://shop.moanafresh.com/products/marinade-aotearoa-journal-of-moana-art",
+      "mailto:marinadejournal@gmail.com?subject=Hello!%20I%20would%20like%20to%20purchase%20a%20copy%20of%20Marinade.",
   },
   international: {
     tabKey: "International",
@@ -28,7 +28,7 @@ window.MARINADE_ISSUES = {
     contributors:
       "Ahilapalapa Rands, Andrea Low, Christina Pataialii, Cora-Allan, Ioana Gordon-Smith, Janet Lilo, Jim Vivieaere, Kalisolaite ‘Uhila, Lana Lopesi, Leafā Wilson/Olga Krause, Léuli Eshrāghi, Misal Adnan Yildiz, Natasha Matila-Smith, Tuāfale Tanoaʻi",
     buyUrl:
-      "https://shop.moanafresh.com/collections/books-1/products/book-marinade-aotearoa-journal-of-moana-art-issue-02",
+      "mailto:marinadejournal@gmail.com?subject=Hello!%20I%20would%20like%20to%20purchase%20a%20copy%20of%20Marinade.",
     stutterImage: "images/img_1.svg",
   },
   friendship: {
@@ -38,7 +38,7 @@ window.MARINADE_ISSUES = {
     contributors:
       "Edith Amituanai, Ralph Brown, Peter Brunt, Kiri Chan, Feeonaa Clifton, Ioana Gordon-Smith, Jacki Leota-Mua, Lindah Lepou, Lana Lopesi, Andrea Low, Gloriana Meyers, Rosanna Raymond, Tuāfale Tanoaʻi, Seutaʻafili Patrick Thomsen, Luisa Keteiyau Tora, Manuhaʻapai Vaeatangitau, John Vea",
     buyUrl:
-      "https://shop.moanafresh.com/products/marinade-aotearoa-journal-of-moana-art-issue-02-copy",
+      "mailto:marinadejournal@gmail.com?subject=Hello!%20I%20would%20like%20to%20purchase%20a%20copy%20of%20Marinade.",
     comparison: {
       base:
         "https://d2w9rnfcy7mm78.cloudfront.net/29561535/original_648ee4d8f854400c4d362c481f55cdbc.png?1721703992?bc=0",
@@ -52,7 +52,8 @@ window.MARINADE_ISSUES = {
     buyLabel: "Coming Soon",
     contributors:
       "Zoe Black, Peter Brunt, Ioana Gordon-Smith, Manumaleuga Grace Iwashita-Taylor, Emelihter Kihleng, Lana Lopesi, Andrea Low, Roman Lytollis, Emma Ng, Emily Parr, Israel Randell, Seuta‘afili Patrick Thomsen, Luisa Keteiyau Tora, Matariki Williams, Leafā Wilson/Olga Krause, Wheke Fortress",
-    buyUrl: "https://shop.moanafresh.com/",
+    buyUrl:
+      "mailto:marinadejournal@gmail.com?subject=Hello!%20I%20would%20like%20to%20purchase%20a%20copy%20of%20Marinade.",
     /** Issue 04 hero artwork (slow spin + gentle zoom; path used by applyIssueCopy). */
     coverLetterSvg: "images/breadfruit.svg",
     /** Solid colour behind the Issue 04 artwork (all breakpoints). */
