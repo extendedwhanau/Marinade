@@ -347,7 +347,7 @@
     }
   }
 
-  /** Issue 04: slow spin + zoom on cover art; pointer tilts / skews the SVG (Fourth tab only). */
+  /** Issue 04: spin + zoom; pointer lean / Z push / width stretch (Fourth tab only). */
   function initIssueFourthLetter() {
     document.documentElement.style.setProperty(
       "--mar-issue-04-spin-start",
@@ -359,14 +359,17 @@
     var tilt = document.querySelector(".issue-04-letter-tilt");
     if (!tilt) return;
 
+    var STRENGTH = 0.85;
     var active = false;
     var rafId = null;
-    var targetX = 0;
-    var targetY = 0;
-    var targetSk = 0;
-    var curX = 0;
-    var curY = 0;
-    var curSk = 0;
+    var targetRotX = 0;
+    var targetRotY = 0;
+    var targetZ = 0;
+    var targetScaleX = 1;
+    var curRotX = 0;
+    var curRotY = 0;
+    var curZ = 0;
+    var curScaleX = 1;
     var ease = 0.12;
 
     function clamp(n, lo, hi) {
@@ -376,13 +379,13 @@
     function onPointer(clientX, clientY) {
       var cx = window.innerWidth * 0.5;
       var cy = window.innerHeight * 0.5;
-      var nx = (clientX - cx) / (window.innerWidth * 0.5 || 1);
-      var ny = (clientY - cy) / (window.innerHeight * 0.5 || 1);
-      nx = clamp(nx, -1, 1);
-      ny = clamp(ny, -1, 1);
-      targetX = ny * -18;
-      targetY = nx * 18;
-      targetSk = nx * 8;
+      var nx = clamp((clientX - cx) / (window.innerWidth * 0.5 || 1), -1, 1);
+      var ny = clamp((clientY - cy) / (window.innerHeight * 0.5 || 1), -1, 1);
+      var over = 1 - clamp(Math.hypot(nx, ny), 0, 1);
+      targetRotX = ny * -14 * STRENGTH;
+      targetRotY = nx * 14 * STRENGTH;
+      targetZ = over * 120 * STRENGTH;
+      targetScaleX = 1 + over * 0.75 * STRENGTH;
     }
 
     function onMove(e) {
@@ -397,19 +400,26 @@
     }
 
     function tick() {
-      curX += (targetX - curX) * ease;
-      curY += (targetY - curY) * ease;
-      curSk += (targetSk - curSk) * ease;
+      curRotX += (targetRotX - curRotX) * ease;
+      curRotY += (targetRotY - curRotY) * ease;
+      curZ += (targetZ - curZ) * ease;
+      curScaleX += (targetScaleX - curScaleX) * ease;
       tilt.style.transform =
         "perspective(1100px) rotateX(" +
-        curX.toFixed(2) +
+        curRotX.toFixed(2) +
         "deg) rotateY(" +
-        curY.toFixed(2) +
-        "deg) skewX(" +
-        curSk.toFixed(2) +
-        "deg)";
+        curRotY.toFixed(2) +
+        "deg) translateZ(" +
+        curZ.toFixed(2) +
+        "px) scaleX(" +
+        curScaleX.toFixed(4) +
+        ") scaleY(1)";
 
-      var mag = Math.abs(curX) + Math.abs(curY) + Math.abs(curSk);
+      var mag =
+        Math.abs(curRotX) +
+        Math.abs(curRotY) +
+        Math.abs(curZ) +
+        Math.abs(curScaleX - 1);
       if (!active && mag < 0.2) {
         tilt.style.transform = "";
         rafId = null;
@@ -434,9 +444,10 @@
       active = false;
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("touchmove", onMove);
-      targetX = 0;
-      targetY = 0;
-      targetSk = 0;
+      targetRotX = 0;
+      targetRotY = 0;
+      targetZ = 0;
+      targetScaleX = 1;
       ensureTick();
     }
 

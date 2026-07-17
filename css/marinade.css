@@ -3001,13 +3001,13 @@ textarea.w-select {
 /* Issue 04 — breadfruit art: slow orbit + subtle zoom; natural colours; pointer tilt in JS */
 @keyframes mar-issue04-orbitzoom {
   0% {
-    transform: rotate(var(--mar-issue-04-spin-start, 0deg)) scale(1.74);
+    transform: rotate(var(--mar-issue-04-spin-start, 0deg)) scale(1.42);
   }
   50% {
-    transform: rotate(calc(var(--mar-issue-04-spin-start, 0deg) + 180deg)) scale(1.96);
+    transform: rotate(calc(var(--mar-issue-04-spin-start, 0deg) + 180deg)) scale(1.62);
   }
   100% {
-    transform: rotate(calc(var(--mar-issue-04-spin-start, 0deg) + 360deg)) scale(1.74);
+    transform: rotate(calc(var(--mar-issue-04-spin-start, 0deg) + 360deg)) scale(1.42);
   }
 }
 
@@ -3029,15 +3029,15 @@ textarea.w-select {
 }
 
 .issue-04-letter-anim {
-  width: 120vmin;
-  height: 120vmin;
+  width: 105vmin;
+  height: 105vmin;
   flex: none;
   display: flex;
   align-items: center;
   justify-content: center;
   transform-origin: 50% 50%;
   will-change: transform;
-  animation: mar-issue04-orbitzoom 220s linear infinite;
+  animation: mar-issue04-orbitzoom 50s linear infinite;
 }
 
 .issue-04-letter-tilt {
@@ -3063,15 +3063,15 @@ textarea.w-select {
 @media (prefers-reduced-motion: reduce) {
   .issue-04-letter-anim {
     animation: none;
-    transform: scale(1.81) rotate(var(--mar-issue-04-spin-start, 0deg));
+    transform: scale(1.52) rotate(var(--mar-issue-04-spin-start, 0deg));
   }
 }
 
 @media screen and (max-width: 767px) {
   .issue-04-letter-anim {
-    width: 125vmin;
-    height: 125vmin;
-    animation-duration: 280s;
+    width: 110vmin;
+    height: 110vmin;
+    animation-duration: 50s;
   }
 }
 
