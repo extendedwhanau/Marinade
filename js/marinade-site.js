@@ -136,9 +136,12 @@
     var canvas = document.querySelector(".html-embed-2 canvas");
     if (!canvas) return;
 
-    /** Original eased trail (0–1). Lower = more “drag”, which is the intended look. */
-    var STUTTER_FOLLOW = 0.34;
-    var STUTTER_TRAIL_GAP = 36;
+    /**
+     * Trail follow strength (higher = snappier). Applied with dt so motion
+     * stays even if the frame rate dips.
+     */
+    var STUTTER_FOLLOW_PER_60FPS = 0.48;
+    var STUTTER_TRAIL_GAP = 28;
     /** ~20% smaller than the original 800×114 stamp. */
     var STAMP_W = 640;
     var STAMP_H = 91;
@@ -164,14 +167,17 @@
     var newWidth = STAMP_W;
     var newHeight = STAMP_H;
     var context;
+    var trailCanvas = document.createElement("canvas");
+    var trailCtx = null;
     var rafId = null;
     var issue02TabActive = false;
     var lastStampX = null;
     var lastStampY = null;
+    var lastTs = null;
     var logicalW = 0;
     var logicalH = 0;
-    /** { x, y } in logical px — opacity is global (see waveStart), so all fade together. */
-    var stamps = [];
+    var dpr = 2;
+    var stampCount = 0;
     /** When the current “wave” of stamps began; all stamps share one fade timeline. */
     var waveStart = null;
 
@@ -184,22 +190,54 @@
       return 1 - u * u * u;
     }
 
+    function configureCtx(ctx) {
+      if (!ctx) return;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(dpr, dpr);
+      ctx.imageSmoothingEnabled = true;
+      if ("imageSmoothingQuality" in ctx) ctx.imageSmoothingQuality = "high";
+    }
+
+    function clearTrail() {
+      stampCount = 0;
+      waveStart = null;
+      lastStampX = null;
+      lastStampY = null;
+      if (trailCtx) {
+        trailCtx.setTransform(1, 0, 0, 1, 0, 0);
+        trailCtx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+        configureCtx(trailCtx);
+      }
+    }
+
     function resize() {
       logicalW = window.innerWidth;
       logicalH = window.innerHeight;
-      canvas.width = window.innerWidth * 2;
-      canvas.height = window.innerHeight * 2;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var pxW = Math.max(1, Math.floor(logicalW * dpr));
+      var pxH = Math.max(1, Math.floor(logicalH * dpr));
+
+      canvas.width = pxW;
+      canvas.height = pxH;
       canvas.style.width = logicalW + "px";
       canvas.style.height = logicalH + "px";
       context = canvas.getContext("2d", { alpha: true, desynchronized: true });
-      if (!context) {
-        context = canvas.getContext("2d");
-      }
-      context.setTransform(1, 0, 0, 1, 0, 0);
-      context.scale(2, 2);
+      if (!context) context = canvas.getContext("2d");
+      configureCtx(context);
+
+      trailCanvas.width = pxW;
+      trailCanvas.height = pxH;
+      trailCtx = trailCanvas.getContext("2d", { alpha: true });
+      configureCtx(trailCtx);
+      clearTrail();
     }
 
     resize();
+
+    function ensureTick() {
+      if (!issue02TabActive) return;
+      if (rafId == null) rafId = requestAnimationFrame(stutter);
+    }
 
     function onMouseMove(event) {
       goalX = event.pageX;
@@ -208,6 +246,7 @@
         mouseX = event.pageX;
         mouseY = event.pageY;
       }
+      ensureTick();
     }
 
     var moveListenerOpts = { passive: true };
@@ -219,24 +258,20 @@
         cancelAnimationFrame(rafId);
         rafId = null;
       }
-      stamps.length = 0;
-      waveStart = null;
+      lastTs = null;
+      clearTrail();
       if (context) {
         context.setTransform(1, 0, 0, 1, 0, 0);
         context.clearRect(0, 0, canvas.width, canvas.height);
-        context.scale(2, 2);
+        configureCtx(context);
       }
-      lastStampX = null;
-      lastStampY = null;
     }
 
     function startIssue02Stutter() {
       if (issue02TabActive) return;
       issue02TabActive = true;
       document.addEventListener("mousemove", onMouseMove, moveListenerOpts);
-      if (rafId == null) {
-        rafId = requestAnimationFrame(stutter);
-      }
+      ensureTick();
     }
 
     document.addEventListener("marinade:tabchange", function (e) {
@@ -259,90 +294,102 @@
         newImage = image;
         newWidth = STAMP_W;
         newHeight = STAMP_H;
-        waveStart = null;
+        clearTrail();
+        if (context) {
+          context.setTransform(1, 0, 0, 1, 0, 0);
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          configureCtx(context);
+        }
+        ensureTick();
       });
       link.addEventListener("mouseleave", function () {
         newWidth = STAMP_W;
         newHeight = STAMP_H;
-        stamps.length = 0;
-        waveStart = null;
+        clearTrail();
         if (context) {
           context.setTransform(1, 0, 0, 1, 0, 0);
           context.clearRect(0, 0, canvas.width, canvas.height);
-          context.scale(2, 2);
+          configureCtx(context);
         }
-        lastStampX = null;
-        lastStampY = null;
       });
     });
 
     window.addEventListener("resize", resize);
 
-    function stutter() {
-      if (!issue02TabActive || !context) {
+    function stutter(ts) {
+      if (!issue02TabActive || !context || !trailCtx) {
         rafId = null;
+        lastTs = null;
         return;
       }
 
+      if (lastTs == null) lastTs = ts;
+      var dt = (ts - lastTs) / 1000;
+      if (dt > 0.05) dt = 0.05;
+      lastTs = ts;
       var now = performance.now();
-      var i;
+      var keepAlive = false;
 
       if (waveStart != null && now - waveStart >= STAMP_LIFETIME_MS) {
-        stamps.length = 0;
-        waveStart = null;
+        clearTrail();
       }
 
-      if (mouseX != null) {
-        if (goalX != null) {
-          mouseX = mouseX + (goalX - mouseX) * STUTTER_FOLLOW;
-          mouseY = mouseY + (goalY - mouseY) * STUTTER_FOLLOW;
-        }
-
-        if (newImage && newImage.complete) {
-          var stamp =
-            lastStampX == null ||
-            Math.hypot(mouseX - lastStampX, mouseY - lastStampY) >= STUTTER_TRAIL_GAP;
-          if (stamp) {
-            if (waveStart == null) {
-              waveStart = now;
-            }
-            stamps.push({ x: mouseX, y: mouseY });
-            while (stamps.length > MAX_STAMPS) {
-              stamps.shift();
-            }
-            lastStampX = mouseX;
-            lastStampY = mouseY;
-          }
+      if (mouseX != null && goalX != null) {
+        // Frame-rate independent easing (matches ~STUTTER_FOLLOW_PER_60FPS at 60fps).
+        var follow = 1 - Math.pow(1 - STUTTER_FOLLOW_PER_60FPS, dt * 60);
+        mouseX = mouseX + (goalX - mouseX) * follow;
+        mouseY = mouseY + (goalY - mouseY) * follow;
+        if (Math.abs(goalX - mouseX) > 0.2 || Math.abs(goalY - mouseY) > 0.2) {
+          keepAlive = true;
         }
       }
 
-      context.clearRect(0, 0, logicalW, logicalH);
+      if (
+        newImage &&
+        newImage.complete &&
+        mouseX != null &&
+        stampCount < MAX_STAMPS
+      ) {
+        var place =
+          lastStampX == null ||
+          Math.hypot(mouseX - lastStampX, mouseY - lastStampY) >= STUTTER_TRAIL_GAP;
+        if (place) {
+          if (waveStart == null) waveStart = now;
+          trailCtx.drawImage(
+            newImage,
+            mouseX - 0.5 * newWidth,
+            mouseY - 0.5 * newHeight,
+            newWidth,
+            newHeight
+          );
+          stampCount += 1;
+          lastStampX = mouseX;
+          lastStampY = mouseY;
+          keepAlive = true;
+        }
+      }
 
-      if (newImage && newImage.complete && stamps.length && waveStart != null) {
+      context.setTransform(1, 0, 0, 1, 0, 0);
+      context.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (stampCount > 0 && waveStart != null) {
         var layerOp = stampOpacity(now - waveStart);
         if (layerOp > 0.008) {
           context.globalAlpha = layerOp;
-          for (i = 0; i < stamps.length; i++) {
-            var s = stamps[i];
-            context.drawImage(
-              newImage,
-              s.x - 0.5 * newWidth,
-              s.y - 0.5 * newHeight,
-              newWidth,
-              newHeight
-            );
-          }
+          // One blit of the cached trail instead of redrawing every stamp.
+          context.drawImage(trailCanvas, 0, 0);
           context.globalAlpha = 1;
+          keepAlive = true;
         } else {
-          stamps.length = 0;
-          waveStart = null;
+          clearTrail();
         }
       }
 
-      if (issue02TabActive) {
+      if (issue02TabActive && keepAlive) {
         rafId = requestAnimationFrame(stutter);
       } else {
         rafId = null;
+        lastTs = null;
       }
     }
   }
